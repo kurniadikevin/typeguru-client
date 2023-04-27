@@ -101,11 +101,22 @@ const selectRandomText=()=>{
   setTextIndex(Math.floor(Math.random()* textData.length) )
 }
 
+const highlightOnGoindWord=()=>{
+  const words: any= document.querySelectorAll('#sample-word');
+  words.forEach((item: any)=>{
+    item.style.color='white'
+  })
+  words[wordIndex].style.color='red';
+}
+
 
 useEffect(()=>{
   selectRandomText()
   },[])
 
+useEffect(()=>{
+  highlightOnGoindWord()
+},[wordIndex])
 
 
   return (
@@ -114,7 +125,15 @@ useEffect(()=>{
         <h1>Typing test</h1>
       </div>
       <div>time elapse: {timeElapse}</div>
-      <div className='h-12'>{sampleText}</div>
+      <div className='h-12 flex flex-row gap-2'>
+        {sampleTextArr.map((item)=>{
+          return(
+            <div id='sample-word'>
+               {item}
+            </div>
+          )
+        })}
+        </div>
       <textarea onKeyDown={typeWordCheck} id='text-input'
       className='text-black h-20 resize-none'></textarea>
       <div>index: {index}</div>
