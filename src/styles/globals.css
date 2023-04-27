@@ -21,3 +21,9 @@ body {
   background-color: black;
   padding: 50px;
 }
+ 
+#text-input:focus{
+  outline: none !important;
+ 
+}
+

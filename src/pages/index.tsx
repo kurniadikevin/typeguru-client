@@ -2,19 +2,21 @@ import Image from 'next/image'
 import { Inter } from 'next/font/google'
 import { useEffect, useState } from 'react';
 import {textData} from '../../textData';
+import 'material-icons/iconfont/material-icons.css'
+
 
 const inter = Inter({ subsets: ['latin'] })
 
 export default function Home() {
 
-  const [status,setStatus]= useState('null');
   const [index,setIndex]= useState(0);
   const [error,setError]= useState<number>(0);
   const [timeElapse,setTimeElapse]= useState<number>(0);
   const [intervalId,setIntervalId]= useState<any>();
-  const [playOn,setPlayOn]= useState(true);
+  const [playOn,setPlayOn]= useState(false);
   const [textIndex,setTextIndex]= useState<number>(0);
   const [wordIndex,setWordIndex]= useState<number>(0);
+  const [wpm,setWpm]= useState<number>();
   let count: number=0;
 
   const sampleText: string = textData[textIndex];
@@ -23,10 +25,7 @@ export default function Home() {
 
  const typeWordCheck=(event: any)=>{
   const textAreaInput: any= document.querySelector('#text-input');
-  console.log(wordIndex+ 'wordIndex')
-  console.log(index+ 'index')
-  //checkForFinish()
-  if( event.key !== 'Backspace'){
+  if( event.key !== 'Backspace' && event.key !== 'Shift'){
     setIndex(()=> index+ 1);
     if(event.key === ' '  ){
       checkForError(textAreaInput.value);
@@ -42,7 +41,6 @@ export default function Home() {
     ){
       setTimeout(()=>{
         userText.push(textAreaInput.value);
-        textAreaInput.value='';
         setPlayOn(false);
         clearInterval(intervalId);
         alert('finish');
@@ -55,7 +53,6 @@ export default function Home() {
  }
 
 const checkForError=(input: string)=>{
-  console.log(sampleTextArr[wordIndex] + '=' + input)
   if(sampleTextArr[wordIndex] !== input.replace(/ /g, '')){
     setError(()=> error + 1)
   }
@@ -68,6 +65,7 @@ const checkForResult=(time:number,textLength:number)=>{
   console.log('error wpm: '+errorWpm);
   const nettWpm= grossWpm - errorWpm;
   console.log('nett wpm:' + nettWpm);
+  setWpm(nettWpm);
 }
 
 const increaseTimeElapse=()=>{
@@ -75,16 +73,22 @@ const increaseTimeElapse=()=>{
   setTimeElapse(count);
 }
 
- const startGame=()=>{
+ const restartGame=()=>{
   const textInput: any= document.querySelector('#text-input');
   textInput.value='';
-  textInput.focus()
-  setPlayOn(true);
+  textInput.focus();
+  setPlayOn(false);
   setIndex(0);
   setWordIndex(0);
   setError(0);
   selectRandomText();
-  clearInterval(intervalId)
+  setTimeElapse(0);
+  clearInterval(intervalId);
+  setWpm(0)
+}
+
+const startTimer=()=>{
+  clearInterval(intervalId);
   const Interval=setInterval(increaseTimeElapse, 1000);
   setIntervalId(Interval);
   return (()=> clearInterval(Interval)) 
@@ -96,51 +100,86 @@ const stopGame=()=>{
   setTimeElapse(0);
 }
 
+const triggerStartGameOnType=(event:any)=>{
+  console.log(event.key)
+  if(playOn===false && event.key !== 'Tab' && event.key !== 'Shift'){
+    startTimer();
+    setPlayOn(true)
+    typeWordCheck(event);
+  } else{
+    typeWordCheck(event)
+  }
+}
+
 //random text to input
 const selectRandomText=()=>{
   setTextIndex(Math.floor(Math.random()* textData.length) )
 }
 
-const highlightOnGoindWord=()=>{
+const highlightOnGoingWord=()=>{
   const words: any= document.querySelectorAll('#sample-word');
   words.forEach((item: any)=>{
     item.style.color='white'
   })
-  words[wordIndex].style.color='red';
+  if(words[wordIndex]){
+    words[wordIndex].style.color='red';
+  }
 }
+
+const  displayCorrectTime=(input:number) :string=>{
+    let minutes:number= Math.floor(input /60);
+    let seconds:number = input % 60;
+    if(minutes===0){
+      return `${seconds}`
+    } else{
+    return `${minutes} : ${seconds}`
+    }
+  }
 
 
 useEffect(()=>{
-  selectRandomText()
+  selectRandomText();
+  const textInput: any= document.querySelector('#text-input');
+  textInput.focus()
   },[])
 
 useEffect(()=>{
-  highlightOnGoindWord()
+  if(sampleTextArr){
+      highlightOnGoingWord()
+  }
 },[wordIndex])
 
 
   return (
-    <div className='h-full flex flex-col items-center justify-center border-2 gap-5'>
-      <div className='h-20'>
-        <h1>Typing test</h1>
+    <div className='h-full flex flex-col items-center justify-center gap-5'>
+      <div className='h-10 border-2'>
+        <div className='text-3xl'>Typing test</div>
       </div>
-      <div>time elapse: {timeElapse}</div>
-      <div className='h-12 flex flex-row gap-2'>
+      <div>Elapse time: {displayCorrectTime(timeElapse)}</div>
+      <div>index: {index}</div>
+      <div>Error: {error}</div>
+      <div > PlayOn: {playOn ? 'true': 'false'}</div>
+      <div>Wpm: {wpm}</div>
+      <div className='flex flex-wrap gap-2 bg-neutral-900 p-5
+       max-w-2xl mb-2'>
         {sampleTextArr.map((item)=>{
           return(
-            <div id='sample-word'>
+            <div id='sample-word' className='text-lg'>
                {item}
             </div>
           )
         })}
         </div>
-      <textarea onKeyDown={typeWordCheck} id='text-input'
-      className='text-black h-20 resize-none'></textarea>
-      <div>index: {index}</div>
-      <div>Error: {error}</div>
-      <div > Status: {status}</div>
-      <button onClick={startGame}>start</button>
-      <button onClick={stopGame}> stop</button>
+      <textarea onKeyDown={triggerStartGameOnType} id='text-input'
+      className='text-black w-30 h-10 resize-none text-lg bg-neutral-900
+      overlow-hidden text-white focus:text-red '
+      ></textarea>
+      <button onClick={restartGame}>
+      <span className="material-icons">refresh</span>     
+      </button>
+      <button onClick={stopGame} >
+      <span className="material-icons">stop</span>     
+      </button>
 
     </div>
   )
