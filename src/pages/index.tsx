@@ -1,47 +1,74 @@
 import Image from 'next/image'
 import { Inter } from 'next/font/google'
 import { useEffect, useState } from 'react';
+import {textData} from '../../textData';
 
 const inter = Inter({ subsets: ['latin'] })
 
 export default function Home() {
 
-
   const [status,setStatus]= useState('null');
   const [index,setIndex]= useState(0);
   const [error,setError]= useState<number>(0);
-  //const [timeCount,setTimeCount]= useState(false);
   const [timeElapse,setTimeElapse]= useState<number>(0);
-  //const[ inter,setInter]= useState(true);
   const [intervalId,setIntervalId]= useState<any>();
-  const [playOn,setPlayOn]= useState(true)
+  const [playOn,setPlayOn]= useState(true);
+  const [textIndex,setTextIndex]= useState<number>(0);
+  const [wordIndex,setWordIndex]= useState<number>(0);
   let count: number=0;
 
+  const sampleText: string = textData[textIndex];
+  const sampleTextArr: string[]= textData[textIndex].split(' ');
+  const userText : string[]=[];
 
-  const sampleText: string='hello world';
-
-// check if the type character is same as the sample text
- const typeCheck=(event: any)=>{
-  // typing true
-  if(event.key === sampleText[index]){
-    setIndex(()=> index+ 1)
-    setStatus('true');
-    // typing finish
-  } else if( index === sampleText.length && playOn === true){
-    const grossWpm= (sampleText.length / 5  )/ (timeElapse / 60); 
-    alert('game stop in'+ (timeElapse));
-    alert('grossWpm : '+ grossWpm);
-    alert( 'error :' + error);
-    setStatus('finish');
-    setPlayOn(false);
-    clearInterval(intervalId);// late finish game one keydown after finish
-  } 
-  // typing condition false
-  else{
-    setStatus('false');
-    setError(()=> error + 1);
+ const typeWordCheck=(event: any)=>{
+  const textAreaInput: any= document.querySelector('#text-input');
+  console.log(wordIndex+ 'wordIndex')
+  console.log(index+ 'index')
+  //checkForFinish()
+  if( event.key !== 'Backspace'){
+    setIndex(()=> index+ 1);
+    if(event.key === ' '  ){
+      checkForError(textAreaInput.value);
+      userText.push(textAreaInput.value);
+      setWordIndex(()=> wordIndex + 1);
+      textAreaInput.value='';
+      setIndex(0);
+      } 
+    //game finish condition
+    else if( 
+      wordIndex === sampleTextArr.length -1 &&
+       index === (sampleTextArr[sampleTextArr.length -1].length) -1
+    ){
+      setTimeout(()=>{
+        userText.push(textAreaInput.value);
+        textAreaInput.value='';
+        setPlayOn(false);
+        clearInterval(intervalId);
+        alert('finish');
+        checkForResult(timeElapse,sampleText.length);
+      },100)
+    }
+  }else if(event.key === 'Backspace' && index > 0){
+    setIndex(()=> index -1)
   }
  }
+
+const checkForError=(input: string)=>{
+  console.log(sampleTextArr[wordIndex] + '=' + input)
+  if(sampleTextArr[wordIndex] !== input.replace(/ /g, '')){
+    setError(()=> error + 1)
+  }
+}
+
+const checkForResult=(time:number,textLength:number)=>{
+  const grossWpm= (textLength / 5  )/ (time / 60); 
+  console.log('gross Wpm: ' +grossWpm);
+  const errorWpm= error / (time/60);
+  console.log('error wpm: '+errorWpm);
+  const nettWpm= grossWpm - errorWpm;
+  console.log('nett wpm:' + nettWpm);
+}
 
 const increaseTimeElapse=()=>{
   count++;
@@ -54,7 +81,9 @@ const increaseTimeElapse=()=>{
   textInput.focus()
   setPlayOn(true);
   setIndex(0);
+  setWordIndex(0);
   setError(0);
+  selectRandomText();
   clearInterval(intervalId)
   const Interval=setInterval(increaseTimeElapse, 1000);
   setIntervalId(Interval);
@@ -67,9 +96,14 @@ const stopGame=()=>{
   setTimeElapse(0);
 }
 
+//random text to input
+const selectRandomText=()=>{
+  setTextIndex(Math.floor(Math.random()* textData.length) )
+}
 
-  useEffect(()=>{
-  
+
+useEffect(()=>{
+  selectRandomText()
   },[])
 
 
@@ -81,11 +115,14 @@ const stopGame=()=>{
       </div>
       <div>time elapse: {timeElapse}</div>
       <div className='h-12'>{sampleText}</div>
-      <textarea onKeyDown={typeCheck} id='text-input'
+      <textarea onKeyDown={typeWordCheck} id='text-input'
       className='text-black h-20 resize-none'></textarea>
+      <div>index: {index}</div>
+      <div>Error: {error}</div>
       <div > Status: {status}</div>
       <button onClick={startGame}>start</button>
       <button onClick={stopGame}> stop</button>
+
     </div>
   )
 }
