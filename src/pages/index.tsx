@@ -1,7 +1,7 @@
 import Image from 'next/image'
 import { Inter } from 'next/font/google'
 import { useEffect, useState } from 'react';
-import {textData} from '../../textData';
+import {textData,fetchRandomParagraph} from '../../textData';
 import 'material-icons/iconfont/material-icons.css'
 
 
@@ -9,6 +9,7 @@ const inter = Inter({ subsets: ['latin'] })
 
 export default function Home() {
 
+  const [textTarget,setTextTarget]= useState<string>('');
   const [index,setIndex]= useState(0);
   const [error,setError]= useState<number>(0);
   const [timeElapse,setTimeElapse]= useState<number>(0);
@@ -19,8 +20,9 @@ export default function Home() {
   const [wpm,setWpm]= useState<number>();
   let count: number=0;
 
-  const sampleText: string = textData[textIndex];
-  const sampleTextArr: string[]= textData[textIndex].split(' ');
+  
+  const sampleText: string = textTarget;// text input target
+  const sampleTextArr: string[]= sampleText.split(' ');
   const userText : string[]=[];
 
  const typeWordCheck=(event: any)=>{
@@ -101,7 +103,6 @@ const stopGame=()=>{
 }
 
 const triggerStartGameOnType=(event:any)=>{
-  console.log(event.key)
   if(playOn===false && event.key !== 'Tab' && event.key !== 'Shift'){
     startTimer();
     setPlayOn(true)
@@ -112,8 +113,9 @@ const triggerStartGameOnType=(event:any)=>{
 }
 
 //random text to input
-const selectRandomText=()=>{
-  setTextIndex(Math.floor(Math.random()* textData.length) )
+const selectRandomText= async()=>{
+  //setTextIndex(Math.floor(Math.random()* textData.length) )
+  setTextTarget(await fetchRandomParagraph())
 }
 
 const highlightOnGoingWord=()=>{
@@ -152,7 +154,7 @@ useEffect(()=>{
 
   return (
     <div className='h-full flex flex-col items-center justify-center gap-5'>
-      <div className='h-10 border-2'>
+      <div className='h-10 '>
         <div className='text-3xl'>Typing test</div>
       </div>
       <div>Elapse time: {displayCorrectTime(timeElapse)}</div>
@@ -180,6 +182,7 @@ useEffect(()=>{
       <button onClick={stopGame} >
       <span className="material-icons">stop</span>     
       </button>
+        <button onClick={fetchRandomParagraph}>fetching</button>
 
     </div>
   )
