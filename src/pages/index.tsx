@@ -4,6 +4,7 @@ import { useEffect, useState } from 'react';
 import {textData,fetchRandomParagraph} from '../../textData';
 import 'material-icons/iconfont/material-icons.css';
 import { LoaderBuble } from '@/components/loader';
+import { ResultComponent } from '@/components/results';
 
 const inter = Inter({ subsets: ['latin'] })
 
@@ -18,6 +19,7 @@ export default function Home() {
   const [playOn,setPlayOn]= useState(false);
   const [wordIndex,setWordIndex]= useState<number>(0);
   const [wpm,setWpm]= useState<number>();
+  const [grossWpm,setGrossWpm]= useState<number>();
   let count: number=0;
 
   
@@ -39,15 +41,14 @@ export default function Home() {
       setIndex(0);
       } 
     //game finish condition
-    else if( 
-      wordIndex === sampleTextArr.length -1 &&
-       index === (sampleTextArr[sampleTextArr.length -1].length) -1
-    ){
+    else if( wordIndex === sampleTextArr.length -1 &&
+       index === (sampleTextArr[sampleTextArr.length -1].length) -1 ){
       setTimeout(()=>{
         userText.push(textAreaInput.value);
         setPlayOn(false);
         clearInterval(intervalId);
         checkForResult(timeElapse,sampleText.length);
+        setTextTarget('')
       },100)
     }
   }// reduce index when backspacing and index is more than zero
@@ -64,6 +65,7 @@ export default function Home() {
 
   const checkForResult=(time:number,textLength:number)=>{
     const grossWpm= (textLength / 5  )/ (time / 60); 
+    setGrossWpm(grossWpm);
     console.log('gross Wpm: ' +grossWpm);
     const errorWpm= error / (time/60);
     console.log('error wpm: '+errorWpm);
@@ -168,7 +170,7 @@ export default function Home() {
   return (
     <div className='h-full flex flex-col items-center justify-center gap-5'>
       <div className='h-10 '>
-        <div className='text-3xl'>TYPEGURU</div>
+        <div className='text-3xl font-bold'>TypeGuru</div>
       </div>
       <div className='flex flex-row gap-10 font-bold bg-neutral-900 p-6 rounded-xl'>
         <div>Time : {displayCorrectTime(timeElapse)}</div>
@@ -199,7 +201,16 @@ export default function Home() {
               </div>
             )
           })}
-          </div> : <LoaderBuble/>
+          </div> : 
+          <div className='my-20'>
+            <ResultComponent 
+              wpm={wpm?.toFixed(1)}
+              grossWpm={grossWpm?.toFixed(1)}
+              accuracy={ (1-(error/wordIndex))*100 }
+              error={error}
+              time={timeElapse} />
+            <LoaderBuble/>
+          </div>
         }
       <input onKeyDown={triggerStartGameOnType} id='text-input'
       className='text-black w-30 h-12 p-3 resize-none text-2xl bg-neutral-900
