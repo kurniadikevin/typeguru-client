@@ -1,12 +1,9 @@
-import Image from 'next/image'
-import { Inter } from 'next/font/google'
 import { useEffect, useState } from 'react';
-import {textData,fetchRandomParagraph} from '../../textData';
+import {textData,fetchRandomParagraph} from '../textData';
 import 'material-icons/iconfont/material-icons.css';
 import { LoaderBuble } from '@/components/loader';
 import { ResultComponent } from '@/components/results';
-
-const inter = Inter({ subsets: ['latin'] })
+import { displayCorrectTime, highlightOnGoingWord, changePrimaryColor } from '@/functions';
 
 export default function Home() {
 
@@ -20,9 +17,8 @@ export default function Home() {
   const [wordIndex,setWordIndex]= useState<number>(0);
   const [wpm,setWpm]= useState<number>();
   const [grossWpm,setGrossWpm]= useState<number>();
-  let count: number=0;
 
-  
+  let count: number=0;
   const sampleText: string = textTarget;// text input target
   const sampleTextArr: string[]= sampleText.split(' ');
   const userText : string[]=[];
@@ -66,7 +62,6 @@ export default function Home() {
   const checkForResult=(time:number,textLength:number)=>{
     const grossWpm= (textLength / 5  )/ (time / 60); 
     setGrossWpm(grossWpm);
-    console.log('gross Wpm: ' +grossWpm);
     const errorWpm= error / (time/60);
     console.log('error wpm: '+errorWpm);
     const nettWpm= grossWpm - errorWpm;
@@ -117,48 +112,31 @@ export default function Home() {
 
   //random text to input
   const selectRandomText= async(paragraphLength: number)=>{
-    //setTextIndex(Math.floor(Math.random()* textData.length) )
     setTextTarget('')
     setTextTarget(await fetchRandomParagraph(1,paragraphLength))
   }
 
-  const highlightOnGoingWord=()=>{
-    const words: any= document.querySelectorAll('#sample-word');
-    words.forEach((item: any)=>{
-      item.style.color='white'
-    })
-    if(words[wordIndex]){
-      words[wordIndex].style.color='red';
-    }
-  }
-
-  const displayCorrectTime=(input:number) :string=>{
-      let minutes:number= Math.floor(input /60);
-      let seconds:number = input % 60;
-      if(minutes===0){
-        return `${seconds}`
-      } else{
-      return `${minutes} : ${seconds}`
-      }}
-
   const selectTextLength=(length:number, index: number)=>{
     const lengthSelects : any= document.querySelectorAll('#length-select');
     for(let i=0; i< lengthSelects.length;i++){
-      lengthSelects[i].style.backgroundColor='rgb(38,38,38)';
+      lengthSelects[i].style.backgroundColor='var(--secondaryColor)';
     }
-    lengthSelects[index].style.backgroundColor='rgb(23 23 23)';
+    lengthSelects[index].style.backgroundColor='var(--tertiaryColor)';
     setTargetTextLength(length);
   } 
 
+
+
   useEffect(()=>{
-    selectRandomText(targetTextLength);
+   // selectRandomText(targetTextLength);
+   selectTextLength(5,1);
     const textInput: any= document.querySelector('#text-input');
-    textInput.focus()
+    textInput.focus();
     },[])
 
   useEffect(()=>{
     if(sampleTextArr){
-        highlightOnGoingWord()
+        highlightOnGoingWord(wordIndex);
     }
   },[wordIndex])
 
@@ -172,7 +150,7 @@ export default function Home() {
       <div className='h-10 '>
         <div className='text-3xl font-bold'>TypeGuru</div>
       </div>
-      <div className='flex flex-row gap-10 font-bold bg-neutral-900 p-6 rounded-xl'>
+      <div className='flex flex-row gap-10 font-bold bg-[color:var(--tertiaryColor)] p-6 rounded-xl'>
         <div>Time : {displayCorrectTime(timeElapse)}</div>
         <div>Char : {index}</div>
         <div> Word : {wordIndex}</div>
@@ -183,16 +161,19 @@ export default function Home() {
 
       <div className='flex gap-2'>
         <div>{targetTextLength}</div>
-        <div className='bg-neutral-800 px-4 py-2 rounded-xl cursor-pointer hover:bg-neutral-900' 
+        <div className='bg-[color:var(--secondaryColor)] px-4 py-2 rounded-xl
+         cursor-pointer hover:bg-neutral-900 font-bold' 
         id='length-select' onClick={()=>selectTextLength(2,0)}>Short</div>
-        <div className='bg-neutral-800 px-4 py-2 rounded-xl cursor-pointer hover:bg-neutral-900'
+        <div className='bg-[color:var(--secondaryColor)] px-4 py-2 rounded-xl
+         cursor-pointer hover:bg-neutral-900 font-bold'
           id='length-select' onClick={()=>selectTextLength(5,1)}>Medium</div>
-        <div className='bg-neutral-800 px-4 py-2 rounded-xl cursor-pointer hover:bg-neutral-900'
+        <div className='bg-[color:var(--secondaryColor)] px-4 py-2 rounded-xl
+         cursor-pointer hover:bg-neutral-900 font-bold'
           id='length-select' onClick={()=>selectTextLength(10,2)}>Long</div>
       </div>
 
       {textTarget ?
-        <div className='flex flex-wrap gap-2 bg-neutral-900 p-5 rounded-xl
+        <div className='flex flex-wrap gap-2 bg-[color:var(--secondaryColor)] p-5 rounded-xl
         max-w-4xl mb-2'>
           {sampleTextArr.map((item)=>{
             return(
@@ -202,19 +183,19 @@ export default function Home() {
             )
           })}
           </div> : 
-          <div className='my-20'>
+          <div className='my-5'>
             <ResultComponent 
               wpm={wpm?.toFixed(1)}
               grossWpm={grossWpm?.toFixed(1)}
               accuracy={ (1-(error/wordIndex))*100 }
               error={error}
               time={timeElapse} />
-            <LoaderBuble/>
+            <LoaderBuble />
           </div>
         }
       <input onKeyDown={triggerStartGameOnType} id='text-input'
-      className='text-black w-30 h-12 p-3 resize-none text-2xl bg-neutral-900
-      overlow-hidden text-white focus:text-red '
+      className=' w-30 h-12 p-3 resize-none text-2xl bg-[color:var(--tertiaryColor)]
+      overlow-hidden text-[color:var(--primaryColor)]'
       ></input>
       <div className='flex flex-row gap-10'>
         <button onClick={restartGame}>
@@ -223,6 +204,8 @@ export default function Home() {
         <button onClick={stopGame} >
         <span className="material-icons">stop</span>     
         </button>
+        <button onClick={()=> changePrimaryColor('beige','black','gray','white','green')}>
+          Change text color</button>
       </div>
     </div>
   )

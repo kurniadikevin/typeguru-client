@@ -4,6 +4,11 @@
     position: relative;
     z-index: 1;
   }
+
+  .wrapper{
+    position: relative;
+    left: 30px;
+  }
   
   .circle {
     width: 20px;
