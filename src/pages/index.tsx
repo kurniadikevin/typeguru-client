@@ -3,12 +3,12 @@ import {textData,fetchRandomParagraph} from '../textData';
 import 'material-icons/iconfont/material-icons.css';
 import { LoaderBuble } from '@/components/loader';
 import { ResultComponent } from '@/components/results';
-import { displayCorrectTime, highlightOnGoingWord, changePrimaryColor, changeInputVisibility } from '@/functions';
+import { displayCorrectTime, highlightOnGoingWord, changePrimaryColor, changeInputVisibility, autoScrollByPercentage } from '@/functions';
 
 export default function Home() {
 
   const [gameMode,setGameMode]= useState<string>('word');
-  const [countDown,setCountDown]= useState<number>(15);
+  const [countDown,setCountDown]= useState<number>(30);
   const [textTarget,setTextTarget]= useState<string>('');
   const [targetTextLength,setTargetTextLength]= useState<number>(5);// default length medium 5 paragraph
   const [index,setIndex]= useState(0);
@@ -59,7 +59,8 @@ export default function Home() {
         checkForResult(countDown,wordIndex * 5);
         setTextTarget('')
       },100)
-      changeInputVisibility('none')
+      changeInputVisibility('none');
+      setTimeElapse(countDown)
     }
   }
   // reduce index when backspacing and index is more than zero
@@ -94,16 +95,21 @@ export default function Home() {
     setTimeElapse(count);
   }
 
-  const changeGameMode=(input:string)=>{
+  const changeGameMode=(input:string,index:number)=>{
+    // change background color selected
+    const btnGameMode : any= document.querySelectorAll('#btn-game-mode');
+    for(let i=0; i< btnGameMode.length;i++){
+      btnGameMode[i].style.backgroundColor='var(--secondaryColor)';
+    }
+    btnGameMode[index].style.backgroundColor='var(--highlightColor)';
+
     setGameMode(input)
     if(input === 'time'){
       count = countDown // time to count down
-      console.log('count '+ count)
-      restartGame(input)
+      selectTextLength(30,1);
     } else if(input === 'word'){
-      count = 0
-      console.log('count '+ count)
-       restartGame(input)
+      count = 0;
+      selectTextLength(5,1)
     }
   }
 
@@ -158,20 +164,20 @@ export default function Home() {
 
   // set countdown time
   const selectTimeCountDown=(time:number,index:number)=>{
-    const lengthSelects : any= document.querySelectorAll('#length-select');
-    for(let i=0; i< lengthSelects.length;i++){
-      lengthSelects[i].style.backgroundColor='var(--secondaryColor)';
+    const btnGameMode : any= document.querySelectorAll('#length-select');
+    for(let i=0; i< btnGameMode.length;i++){
+      btnGameMode[i].style.backgroundColor='var(--secondaryColor)';
     }
-    lengthSelects[index].style.backgroundColor='var(--tertiaryColor)';
+    btnGameMode[index].style.backgroundColor='var(--highlightColor)';
     setCountDown(time);
   }
 
   const selectTextLength=(length:number, index: number)=>{
-    const lengthSelects : any= document.querySelectorAll('#length-select');
-    for(let i=0; i< lengthSelects.length;i++){
-      lengthSelects[i].style.backgroundColor='var(--secondaryColor)';
+    const btnGameMode : any= document.querySelectorAll('#length-select');
+    for(let i=0; i< btnGameMode.length;i++){
+      btnGameMode[i].style.backgroundColor='var(--secondaryColor)';
     }
-    lengthSelects[index].style.backgroundColor='var(--tertiaryColor)';
+    btnGameMode[index].style.backgroundColor='var(--highlightColor)';
     setTargetTextLength(length);
   } 
 
@@ -181,12 +187,14 @@ export default function Home() {
    selectTextLength(5,1);
     const textInput: any= document.querySelector('#text-input');
     textInput.focus();
+   
     },[])
 
   //highlight word on chage wordIndex
   useEffect(()=>{
     if(sampleTextArr){
         highlightOnGoingWord(wordIndex);
+        autoScrollByPercentage(wordIndex,sampleTextArr.length)
     }
   },[wordIndex])
 
@@ -199,47 +207,48 @@ export default function Home() {
   return (
     <div className='h-full flex flex-col items-center justify-center gap-5'>
       <div className='h-10 '>
-        <div className='text-3xl font-bold'>TypeGuru</div>
+        <div className='text-3xl font-bold text-[color:var(--accent)]'>TypeGuru</div>
       </div>
       <div className='flex flex-row gap-10 font-bold bg-[color:var(--tertiaryColor)] p-6 rounded-xl'>
-        <div>Time : {/* displayCorrectTime */(timeElapse)}</div>
+        <div>Time : {displayCorrectTime(timeElapse)}</div>
         <div>Char : {index}</div>
         <div> Word : {wordIndex}</div>
         <div>Error : {error}</div>
         <div > PlayOn : {playOn ? 'true': 'false'}</div>
         <div>WPM : {wpm?.toFixed(1)}</div>
         <div>Game mode : {gameMode}</div>
+        <div>Test target length : {targetTextLength}</div>
       </div>
 
     {gameMode === 'word'?
       <div className='flex gap-2'>
         <div className='bg-[color:var(--secondaryColor)] px-4 py-2 rounded-xl
-         cursor-pointer hover:bg-neutral-900 font-bold' 
+         cursor-pointer font-bold' 
         id='length-select' onClick={()=>selectTextLength(2,0)}>Short</div>
         <div className='bg-[color:var(--secondaryColor)] px-4 py-2 rounded-xl
-         cursor-pointer hover:bg-neutral-900 font-bold'
+         cursor-pointer font-bold'
           id='length-select' onClick={()=>selectTextLength(5,1)}>Medium</div>
         <div className='bg-[color:var(--secondaryColor)] px-4 py-2 rounded-xl
-         cursor-pointer hover:bg-neutral-900 font-bold'
+         cursor-pointer font-bold'
           id='length-select' onClick={()=>selectTextLength(10,2)}>Long</div>
       </div>
       :
       <div className='flex gap-2'>
         <div className='bg-[color:var(--secondaryColor)] px-4 py-2 rounded-xl
-         cursor-pointer hover:bg-neutral-900 font-bold' 
+         cursor-pointer font-bold' 
         id='length-select' onClick={()=>selectTimeCountDown(15,0)}>15</div>
         <div className='bg-[color:var(--secondaryColor)] px-4 py-2 rounded-xl
-         cursor-pointer hover:bg-neutral-900 font-bold'
+         cursor-pointer font-bold'
           id='length-select' onClick={()=>selectTimeCountDown(30,1)}>30</div>
         <div className='bg-[color:var(--secondaryColor)] px-4 py-2 rounded-xl
-         cursor-pointer hover:bg-neutral-900 font-bold'
+         cursor-pointer font-bold'
           id='length-select' onClick={()=>selectTimeCountDown(60,2)}>60</div>
       </div>
       }
 
-      {textTarget ?
-        <div className='flex flex-wrap gap-2 bg-[color:var(--secondaryColor)] p-5 rounded-xl
-        max-w-4xl mb-2'>
+      {textTarget   ?
+        <div className='flex flex-wrap gap-2 bg-[color:var(--secondaryColor)] p-5 rounded-xl 
+        max-w-4xl mb-2 overflow-auto max-h-80' id='text-target-body'>
           {sampleTextArr.map((item)=>{
             return(
               <div id='sample-word' className='text-xl'>
@@ -248,13 +257,14 @@ export default function Home() {
             )
           })}
           </div> : 
-          <div className='my-5'>
+          <div className='my-5 min-h-80 '>
             <ResultComponent 
               wpm={wpm?.toFixed(1)}
               grossWpm={grossWpm?.toFixed(1)}
               accuracy={ (1-(error/wordIndex))*100 }
               error={error}
-              time={timeElapse} />
+              time={timeElapse} 
+              wordCount={wordIndex}/>
             <LoaderBuble />
           </div>
         }
@@ -262,7 +272,7 @@ export default function Home() {
       className=' w-30 h-12 p-3 resize-none text-2xl bg-[color:var(--tertiaryColor)]
       overlow-hidden text-[color:var(--primaryColor)]'
       ></input>
-      <div className='flex flex-row gap-10'>
+      <div className='flex flex-row gap-5'>
         <button onClick={()=>restartGame(gameMode)}>
         <span className="material-icons">refresh</span>     
         </button>
@@ -272,8 +282,16 @@ export default function Home() {
         <button onClick={()=> changePrimaryColor('beige','black','gray','white','green')}>
           Change text color
         </button>
-        <button onClick={()=> changeGameMode('time')}>Time mode</button>
-        <button onClick={()=> changeGameMode('word')}>Word mode</button>
+        <button id='btn-game-mode'
+          className='bg-[color:var(--secondaryColor)] px-4 py-2 rounded-xl
+          cursor-pointer font-bold hover:bg-[color:var(--highlightColor)]'
+          onClick={()=> changeGameMode('time',0)}>Time mode
+        </button>
+        <button id='btn-game-mode'
+          className='bg-[color:var(--secondaryColor)] px-4 py-2 rounded-xl
+          cursor-pointer font-bold hover:bg-[color:var(--highlightColor)]'
+          onClick={()=> changeGameMode('word',1)}>Word mode
+        </button>
       </div>
     </div>
   )

@@ -2,9 +2,9 @@ export const displayCorrectTime=(input:number) :string=>{
     let minutes:number= Math.floor(input /60);
     let seconds:number = input % 60;
     if(minutes===0){
-      return `${seconds}`
+      return `${seconds}s`
     } else{
-    return `${minutes} : ${seconds}`
+    return `${minutes}m ${seconds}s`
     }}
 
 export const highlightOnGoingWord=(wordIndex:number)=>{
@@ -13,7 +13,7 @@ export const highlightOnGoingWord=(wordIndex:number)=>{
         item.style.color='var(--primaryColor)'
     })
     if(words[wordIndex]){
-        words[wordIndex].style.color='var(--highlightColor)';
+        words[wordIndex].style.color='var(--accent)';
     }}
 
 export const changeInputVisibility=(display:string)=>{
@@ -28,4 +28,14 @@ export const changePrimaryColor=(background:string,primary:string,secondary:stri
  root.style.setProperty('--secondaryColor', secondary);
  root.style.setProperty('--tertiaryColor', tertinary);
  root.style.setProperty('--highlightColor', highlight);
+}
+
+export const autoScrollByPercentage=( typingIndex:number,textLength:number )=>{
+    const textBody:any= document.querySelector('#text-target-body');
+    let progress: number= (typingIndex / textLength ) -0.2; 
+    if(textBody){
+        textBody.scrollTop = progress * textBody.scrollHeight;
+
+        console.log( textBody.scrollTop);
+    }
 }

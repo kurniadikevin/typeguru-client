@@ -10,7 +10,8 @@
   --secondaryColor:rgb(38,38,38);
   --tertiaryColor: rgb(23 23 23);
   --backgroundColor: rgb(15,15,15);
-  --highlightColor: red;
+  --highlightColor: rgb(244,140,160);
+  --accent:rgb(146,212,212);
 }
 
 
@@ -26,10 +27,34 @@ body {
   color: var(--primaryColor);
   background-color: var(--backgroundColor);
   padding: 20px;
-  font-family: 'Roboto', sans-serif;
 }
  
 #text-input:focus{
   outline: none !important;
  
 }
+
+
+/* CUSTOM SCROLLBAR */
+/* width */
+::-webkit-scrollbar {
+  width:3px;
+  height: 5px;
+}
+
+/* Track */
+::-webkit-scrollbar-track {
+  background: var(--background);
+}
+ 
+/* Handle */
+::-webkit-scrollbar-thumb {
+  background: var(--accent);
+}
+
+/* Handle on hover */
+::-webkit-scrollbar-thumb:hover {
+  background: var(--tertiaryColor);
+}
+
+
