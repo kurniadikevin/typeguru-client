@@ -14,8 +14,12 @@ export const highlightOnGoingWord=(wordIndex:number)=>{
     })
     if(words[wordIndex]){
         words[wordIndex].style.color='var(--highlightColor)';
-    }
-    }
+    }}
+
+export const changeInputVisibility=(display:string)=>{
+    const input:any = document.querySelector('#text-input');
+    input.style.display= display
+}
 
 export const changePrimaryColor=(background:string,primary:string,secondary:string,tertinary:string,highlight:string)=>{
  const root: any= document.querySelector(':root');

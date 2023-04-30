@@ -13,6 +13,7 @@
   --highlightColor: red;
 }
 
+
 @media (prefers-color-scheme: dark) {
   :root {
     --foreground-rgb: 255, 255, 255;
@@ -25,6 +26,7 @@ body {
   color: var(--primaryColor);
   background-color: var(--backgroundColor);
   padding: 20px;
+  font-family: 'Roboto', sans-serif;
 }
  
 #text-input:focus{

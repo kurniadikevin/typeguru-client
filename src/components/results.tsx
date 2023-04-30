@@ -2,7 +2,7 @@ export const ResultComponent=(props:any)=>{
     
     return(
         <div >
-        {props.wpm >0  ? 
+        {props.wpm /* >0 */  ? 
         <div className='flex flex-col text-2xl w-100 gap-2 font-bold
          bg-neutral-800 rounded-xl p-6 mb-5'>
             <div className='flex gap-10 justify-between'>
