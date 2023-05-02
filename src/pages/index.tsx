@@ -1,9 +1,9 @@
 import { useEffect, useState } from 'react';
-import {textData,fetchRandomParagraph} from '../textData';
+import {fetchRandomParagraph} from '../textData';
 import 'material-icons/iconfont/material-icons.css';
 import { LoaderBuble } from '@/components/loader';
 import { ResultComponent } from '@/components/results';
-import { displayCorrectTime, highlightOnGoingWord, changePrimaryColor, changeInputVisibility, autoScrollByPercentage } from '@/functions';
+import { displayCorrectTime, highlightOnGoingWord, changeInputVisibility, autoScrollByPercentage } from '@/functions';
 import { ColorToggler } from '@/components/colorToggler';
 
 export default function Home() {
@@ -198,11 +198,15 @@ export default function Home() {
         highlightOnGoingWord(wordIndex);
         autoScrollByPercentage(wordIndex,sampleTextArr.length)
     }
+
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   },[wordIndex])
 
   //restart when text length changed
   useEffect(()=>{
     restartGame(gameMode)
+
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   },[targetTextLength,countDown])
 
 
@@ -217,7 +221,7 @@ export default function Home() {
         <div>Error : {error}</div>
         <div > PlayOn : {playOn ? 'true': 'false'}</div>
         <div>Game mode : {gameMode}</div>
-        <div>Paragraph : {targetTextLength}</div>
+        <div>Sentence : {targetTextLength}</div>
         <ColorToggler/>
       </div>
 
@@ -250,9 +254,9 @@ export default function Home() {
       {textTarget   ?
         <div className='flex flex-wrap gap-2 bg-[color:var(--secondaryColor)] p-5 rounded-xl 
         max-w-4xl mb-2 overflow-auto max-h-80' id='text-target-body'>
-          {sampleTextArr.map((item)=>{
+          {sampleTextArr.map((item,index)=>{
             return(
-              <div id='sample-word' className='text-xl'>
+              <div id='sample-word' className='text-xl' key={index}>
                 {item}
               </div>
             )
