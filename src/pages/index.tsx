@@ -4,6 +4,7 @@ import 'material-icons/iconfont/material-icons.css';
 import { LoaderBuble } from '@/components/loader';
 import { ResultComponent } from '@/components/results';
 import { displayCorrectTime, highlightOnGoingWord, changePrimaryColor, changeInputVisibility, autoScrollByPercentage } from '@/functions';
+import { ColorToggler } from '@/components/colorToggler';
 
 export default function Home() {
 
@@ -19,6 +20,7 @@ export default function Home() {
   const [wordIndex,setWordIndex]= useState<number>(0);
   const [wpm,setWpm]= useState<number>();
   const [grossWpm,setGrossWpm]= useState<number>();
+  const [colorMode,setColorMode]= useState<string>('night');
 
   let count: number= timeElapse;
   const sampleText: string = textTarget;// text input target
@@ -210,14 +212,13 @@ export default function Home() {
         <div className='text-3xl font-bold text-[color:var(--accent)]'>TypeGuru</div>
       </div>
       <div className='flex flex-row gap-10 font-bold bg-[color:var(--tertiaryColor)] p-6 rounded-xl'>
-        <div>Time : {displayCorrectTime(timeElapse)}</div>
-        <div>Char : {index}</div>
+        <div className='text-[color:var(--highlightColor)]'>Time : {displayCorrectTime(timeElapse)}</div>
         <div> Word : {wordIndex}</div>
         <div>Error : {error}</div>
         <div > PlayOn : {playOn ? 'true': 'false'}</div>
-        <div>WPM : {wpm?.toFixed(1)}</div>
         <div>Game mode : {gameMode}</div>
-        <div>Test target length : {targetTextLength}</div>
+        <div>Paragraph : {targetTextLength}</div>
+        <ColorToggler/>
       </div>
 
     {gameMode === 'word'?
@@ -275,12 +276,6 @@ export default function Home() {
       <div className='flex flex-row gap-5'>
         <button onClick={()=>restartGame(gameMode)}>
         <span className="material-icons">refresh</span>     
-        </button>
-        <button onClick={stopGame} >
-        <span className="material-icons">stop</span>     
-        </button>
-        <button onClick={()=> changePrimaryColor('beige','black','gray','white','green')}>
-          Change text color
         </button>
         <button id='btn-game-mode'
           className='bg-[color:var(--secondaryColor)] px-4 py-2 rounded-xl
