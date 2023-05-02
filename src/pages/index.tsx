@@ -184,13 +184,11 @@ export default function Home() {
     setTargetTextLength(length);
   } 
 
-
   //initial load
   useEffect(()=>{
    selectTextLength(5,1);
     const textInput: any= document.querySelector('#text-input');
     textInput.focus();
-   
     },[])
 
   //highlight word on chage wordIndex
