@@ -161,7 +161,8 @@ export default function Home() {
   //random text to input
   const selectRandomText= async(paragraphLength: number)=>{
     setTextTarget('')
-    setTextTarget(await fetchRandomParagraph(1,paragraphLength))
+    const newParagraph= await fetchRandomParagraph(paragraphLength) ?? ""
+    setTextTarget(newParagraph)
   }
 
   // set countdown time
@@ -221,7 +222,7 @@ export default function Home() {
         <div>Error : {error}</div>
         <div > PlayOn : {playOn ? 'true': 'false'}</div>
         <div>Game mode : {gameMode}</div>
-        <div>Sentence : {targetTextLength}</div>
+        <div>Sentences : {targetTextLength}</div>
         <ColorToggler/>
       </div>
 
