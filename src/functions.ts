@@ -45,7 +45,5 @@ export const autoScrollByPercentage=( typingIndex:number,textLength:number )=>{
     let progress: number= (typingIndex / textLength ) -0.2; 
     if(textBody){
         textBody.scrollTop = progress * textBody.scrollHeight;
-
-        console.log( textBody.scrollTop);
     }
 }

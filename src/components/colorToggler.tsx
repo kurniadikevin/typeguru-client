@@ -10,8 +10,10 @@ export const ColorToggler =()=>{
         toggleDayNightMode(mode)
         if(mode === 'night'){
         setColorMode('day')
+        localStorage.setItem('theme','day')
         } else if( mode ==='day'){
             setColorMode('night')
+            localStorage.setItem('theme','night')
         }
     }
 

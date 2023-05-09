@@ -5,6 +5,7 @@ import { LoaderBuble } from '@/components/loader';
 import { ResultComponent } from '@/components/results';
 import { displayCorrectTime, highlightOnGoingWord, changeInputVisibility, autoScrollByPercentage } from '@/functions';
 import { ColorToggler } from '@/components/colorToggler';
+import { BottomInfo } from '@/components/bottomInfo';
 
 export default function Home() {
 
@@ -20,7 +21,6 @@ export default function Home() {
   const [wordIndex,setWordIndex]= useState<number>(0);
   const [wpm,setWpm]= useState<number>();
   const [grossWpm,setGrossWpm]= useState<number>();
-  const [colorMode,setColorMode]= useState<string>('night');
 
   let count: number= timeElapse;
   const sampleText: string = textTarget;// text input target
@@ -109,6 +109,7 @@ export default function Home() {
     if(input === 'time'){
       count = countDown // time to count down
       selectTextLength(30,1);
+      selectTimeCountDown(30,1)
     } else if(input === 'word'){
       count = 0;
       selectTextLength(5,1)
@@ -127,6 +128,7 @@ export default function Home() {
     selectRandomText(targetTextLength);
     clearInterval(intervalId);
     setWpm(0);
+    autoScrollByPercentage(0,sampleTextArr.length)
     if(type ==='time'){
       setTimeElapse(countDown);
     } else if(type=== 'word') {
@@ -175,6 +177,8 @@ export default function Home() {
     setCountDown(time);
   }
 
+
+
   const selectTextLength=(length:number, index: number)=>{
     const btnGameMode : any= document.querySelectorAll('#length-select');
     for(let i=0; i< btnGameMode.length;i++){
@@ -187,8 +191,9 @@ export default function Home() {
   //initial load
   useEffect(()=>{
    selectTextLength(5,1);
-    const textInput: any= document.querySelector('#text-input');
-    textInput.focus();
+   const textInput: any= document.querySelector('#text-input');
+   textInput.focus();
+   changeGameMode('word',1)// default game mode word
     },[])
 
   //highlight word on chage wordIndex
@@ -204,16 +209,16 @@ export default function Home() {
   //restart when text length changed
   useEffect(()=>{
     restartGame(gameMode)
-
     // eslint-disable-next-line react-hooks/exhaustive-deps
   },[targetTextLength,countDown])
 
 
   return (
     <div className='h-full flex flex-col items-center justify-center gap-5'>
-      <div className='h-10 '>
-        <div className='text-3xl font-bold text-[color:var(--accent)]'>TypeGuru</div>
+      <div className='h-10  mb-2'>
+        <div className='text-3xl font-bold text-[color:var(--accent)] '>TypeGuru</div>
       </div>
+      { wpm ?'':
       <div className='flex flex-row gap-10 font-bold bg-[color:var(--tertiaryColor)] p-6 rounded-xl'>
         <div className='text-[color:var(--highlightColor)]'>Time : {displayCorrectTime(timeElapse)}</div>
         <div> Word : {wordIndex}</div>
@@ -221,8 +226,9 @@ export default function Home() {
         <div > PlayOn : {playOn ? 'true': 'false'}</div>
         <div>Game mode : {gameMode}</div>
         <div>Sentences : {targetTextLength}</div>
-        <ColorToggler/>
+        <ColorToggler />
       </div>
+      }
 
     {gameMode === 'word'?
       <div className='flex gap-2'>
@@ -251,8 +257,8 @@ export default function Home() {
       }
 
       {textTarget   ?
-        <div className='flex flex-wrap gap-2 bg-[color:var(--secondaryColor)] p-5 rounded-xl 
-        max-w-4xl mb-2 overflow-auto max-h-80' id='text-target-body'>
+        <div className='flex flex-wrap gap-2 bg-[color:var(--secondaryColor)] p-5 rounded-xl border-8 border-[color:var(--secondaryColor)]
+        max-w-4xl mb-2 overflow-auto max-h-60' id='text-target-body'>
           {sampleTextArr.map((item,index)=>{
             return(
               <div id='sample-word' className='text-xl' key={index}>
@@ -291,6 +297,7 @@ export default function Home() {
           onClick={()=> changeGameMode('word',1)}>Word mode
         </button>
       </div>
+      <BottomInfo />
     </div>
   )
 }
