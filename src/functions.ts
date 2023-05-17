@@ -47,3 +47,10 @@ export const autoScrollByPercentage=( typingIndex:number,textLength:number )=>{
         textBody.scrollTop = progress * textBody.scrollHeight;
     }
 }
+
+
+export const shuffleColorPalette=(colorDataIndex: number, colorData: any)=>{
+    const colorDataKey= Object.keys(colorData);
+    const colorName=colorData[colorDataKey[colorDataIndex] as keyof typeof colorData];
+    changePrimaryColor(colorName[0],colorName[1],colorName[2],colorName[3],colorName[4],colorName[5])
+}

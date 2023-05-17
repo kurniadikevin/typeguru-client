@@ -3,9 +3,10 @@ import {fetchRandomParagraph} from '../textData';
 import 'material-icons/iconfont/material-icons.css';
 import { LoaderBuble } from '@/components/loader';
 import { ResultComponent } from '@/components/results';
-import { displayCorrectTime, highlightOnGoingWord, changeInputVisibility, autoScrollByPercentage } from '@/functions';
+import { displayCorrectTime, highlightOnGoingWord, changeInputVisibility, autoScrollByPercentage, shuffleColorPalette } from '@/functions';
 import { ColorToggler } from '@/components/colorToggler';
 import { BottomInfo } from '@/components/bottomInfo';
+import { colorData } from '@/components/colordata';
 
 export default function Home() {
 
@@ -21,6 +22,7 @@ export default function Home() {
   const [wordIndex,setWordIndex]= useState<number>(0);
   const [wpm,setWpm]= useState<number>();
   const [grossWpm,setGrossWpm]= useState<number>();
+  const [colorDataIndex,setColorDataIndex]= useState<number>(0);
 
   let count: number= timeElapse;
   const sampleText: string = textTarget;// text input target
@@ -188,6 +190,15 @@ export default function Home() {
     setTargetTextLength(length);
   } 
 
+  const toggleNextColorShuffle=()=>{
+    shuffleColorPalette(colorDataIndex, colorData);
+    if( colorDataIndex < Object.keys(colorData).length - 1){
+      setColorDataIndex(()=> colorDataIndex + 1)
+    } else{
+      setColorDataIndex(0)
+    }
+  }
+
   //initial load
   useEffect(()=>{
    selectTextLength(5,1);
@@ -223,7 +234,6 @@ export default function Home() {
         <div className='text-[color:var(--highlightColor)]'>Time : {displayCorrectTime(timeElapse)}</div>
         <div> Word : {wordIndex}</div>
         <div>Error : {error}</div>
-        <div > PlayOn : {playOn ? 'true': 'false'}</div>
         <div>Game mode : {gameMode}</div>
         <div>Sentences : {targetTextLength}</div>
         <ColorToggler />
@@ -295,6 +305,9 @@ export default function Home() {
           className='bg-[color:var(--secondaryColor)] px-4 py-2 rounded-xl
           cursor-pointer font-bold hover:bg-[color:var(--highlightColor)]'
           onClick={()=> changeGameMode('word',1)}>Word mode
+        </button>
+        <button onClick={()=> toggleNextColorShuffle()}>
+        <span className="material-icons">palette</span>     
         </button>
       </div>
       <BottomInfo />
