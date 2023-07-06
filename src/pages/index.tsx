@@ -214,14 +214,11 @@ export default function Home() {
         highlightOnGoingWord(wordIndex);
         autoScrollByPercentage(wordIndex,sampleTextArr.length)
     }
-
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   },[wordIndex])
 
   //restart when text length changed
   useEffect(()=>{
     restartGame(gameMode)
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   },[targetTextLength,countDown])
 
 

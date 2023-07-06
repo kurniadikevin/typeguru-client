@@ -1,6 +1,7 @@
 import Dashboard from '@/components/dashboard';
 import { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
+import { callModal } from '@/functions';
 import axios from 'axios';
 
 
@@ -23,15 +24,15 @@ export default function SignPage() {
       url: `http://localhost:5000/users/${urlExt}`,
     }).then((res) => {
       if(res.data === 'No User Exists'){
-        alert(res.data)
+        callModal(res.data)
       } else{
         if(input === 'Sign-up'){
-         alert(res.data.message)
+         callModal(res.data.message)
           console.log(res.data)
         } 
         // Succesful sign in
         else if( input === 'Sign-in'){
-          alert(res.data.message)
+          callModal(res.data.message)
           console.log(res.data)
           if(res.data.status === 200){
            redirectSignIn(res);
@@ -78,7 +79,7 @@ useEffect(()=>{
                 Sign Page
             </div>
            
-            <div className="bg-[color:var(--secondaryColor)] border-2 border-black  p-8 gap-2">
+            <div className="bg-[color:var(--secondaryColor)] border-2 border-black rounded-lg  p-8 gap-2">
              <div className="h-20 flex item-end justify-start gap-4 p-4">
                 <div id="Sign-in-select" className="text-xl text-[color:var(--accent)]  pt-4 cursor-pointer" onClick={()=> setType('Sign-in')}>
                     Sign-in

@@ -1,5 +1,6 @@
 import { useRouter } from 'next/navigation';
 import { useEffect, useState } from 'react';
+import Modal from './modal';
 
 
 export default function Dashboard() {
@@ -39,7 +40,9 @@ export default function Dashboard() {
                 onClick={()=> push('/sign-page')}>
                     Sign
             </button>
+            
             </div>
+            <Modal/>
       </div>
     )
   }

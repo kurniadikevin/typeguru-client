@@ -31,8 +31,17 @@ body {
  
 #text-input:focus{
   outline: none !important;
- 
 }
+
+#modal{
+  opacity: 0;
+  position: absolute;
+  bottom: 50px;
+  left: 50px;
+  transition: 0.5s;
+}
+
+
 
 
 /* CUSTOM SCROLLBAR */
