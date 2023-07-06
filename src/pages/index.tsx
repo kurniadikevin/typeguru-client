@@ -7,6 +7,7 @@ import { displayCorrectTime, highlightOnGoingWord, changeInputVisibility, autoSc
 import { ColorToggler } from '@/components/colorToggler';
 import { BottomInfo } from '@/components/bottomInfo';
 import { colorData } from '@/components/colordata';
+import Dashboard from '@/components/dashboard';
 
 export default function Home() {
 
@@ -226,9 +227,7 @@ export default function Home() {
 
   return (
     <div className='h-full flex flex-col items-center justify-center gap-5'>
-      <div className='h-10  mb-2'>
-        <div className='text-3xl font-bold text-[color:var(--accent)] '>TypeGuru</div>
-      </div>
+      <Dashboard/>
       { wpm ?'':
       <div className='flex flex-row gap-10 font-bold bg-[color:var(--tertiaryColor)] p-6 rounded-xl'>
         <div className='text-[color:var(--highlightColor)]'>Time : {displayCorrectTime(timeElapse)}</div>
