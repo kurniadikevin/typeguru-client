@@ -45,7 +45,7 @@ export default function LeaderBoardPage() {
 
   //toggle category and assign option by category time or word
   const toggleCategoryAndOption=(e:any,index:number)=>{
-    highlightSelection(e,index,'#cat-select')
+    highlightSelection(e,index,'#cat-select');
     getTextContent(e,setCategory);
     const divText = e.target.textContent;
     if(divText === 'Time'){
@@ -55,6 +55,7 @@ export default function LeaderBoardPage() {
     }
   }
 
+  
   //render leaderboard data
   const renderLeaderBoardData=():any=> {
     return( data.map((item:any, index:number) => (

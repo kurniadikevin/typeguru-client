@@ -20,7 +20,9 @@ export default function Dashboard() {
 
     return (
         <div className='h-10  mb-2 w-full  flex'>
-            <div className='w-1/4 flex justify-end items-center font-bold gap-2'>
+            <div className='w-1/4 flex justify-end items-center 
+            hover:text-[color:var(--highlightColor)] font-bold gap-2 cursor-pointer'
+            onClick={()=> push('/profile-page')}>
                 <span className="material-icons">account_circle</span>     
                 <div>{currentUser}</div>
             </div>
