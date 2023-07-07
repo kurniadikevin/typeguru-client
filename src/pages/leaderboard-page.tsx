@@ -32,8 +32,7 @@ export default function LeaderBoardPage() {
      axios({
       method : 'GET',
       url: url,
-      headers : {  Authorization : `Bearer ${localStorage.getItem("token")}`},
-    
+
     }).then((res)=>{
       setData(res.data);
       console.log(res.data)

@@ -1,3 +1,5 @@
+import axios from "axios";
+
 export const displayCorrectTime=(input:number) :string=>{
     let minutes:number= Math.floor(input /60);
     let seconds:number = input % 60;
@@ -97,4 +99,87 @@ export const formatDate=(input: any)=>{
   const day= date.split('-');
    day[day.length-1] = Number(day[day.length -1]) 
   return day.reverse().join('/')
+}
+
+export const getUserBestTimeData=async(userId:any)=>{
+  axios({
+    method: "GET",
+    url: `http://localhost:5000/best-time/by-user-id/${userId}`,
+  }).then((res) => {
+    console.log(res.data)
+    localStorage.setItem("best-time-list", JSON.stringify(res.data));
+  }).catch((err)=>{
+    console.log(err)
+  });
+}
+
+export const checkForHigherWpm=(wpm:number,category:string, type:any)=>{
+  const data:any= localStorage.getItem("best-time-list")
+  const bestTimeList= JSON.parse(data)
+
+  const userData:any= localStorage.getItem('session-data')
+  const currentUser=JSON.parse(userData)
+  
+  //check if data with certain type available
+  const catAndTypeList=bestTimeList.filter((item:any)=>{
+    return item.type === type
+  })
+
+  // filter to check current running test is higher than user wpm data
+  const higherWpmData= catAndTypeList.filter((item:any)=>{
+    return  item.wpm > wpm
+  })
+
+  //update data if there is none of higher wpm on certain type and category
+  if(higherWpmData.length === 0 && catAndTypeList.length > 0){
+    updateBestTimeData(catAndTypeList[0].id, wpm,currentUser.id)
+
+  } 
+  // create best time data if there is not type and category available
+  else if(catAndTypeList.length === 0){
+    createNewBestTimeData(wpm,category,type,currentUser.id)
+  } 
+  // do nothing if category and type data available but wpm is not higher 
+  else if(catAndTypeList.length > 0 && higherWpmData.length > 0){
+    return;
+  }
+}
+
+
+
+const updateBestTimeData=async(bestTimeId:number,wpm:number, userId:number)=>{
+  axios({
+    method: "POST",
+    data : {
+      wpm : wpm
+    },
+    url: `http://localhost:5000/best-time/update/${bestTimeId}`,
+    headers : {  Authorization : `Bearer ${localStorage.getItem("token")}`},
+  }).then((res) => {
+    console.log(res.data)
+    callModal('Personal best wpm updated!'+ bestTimeId)
+    getUserBestTimeData(userId)// update localstorage best time
+  }).catch((err)=>{
+    console.log(err)
+  });
+}
+
+const createNewBestTimeData=async(wpm:number, category:string,type:any,userId:number)=>{
+  axios({
+    method: "POST",
+    data : {
+      "user_id" : userId,
+      "category" : category,
+      "type" : type,
+      "wpm" : wpm
+  },
+    url: `http://localhost:5000/best-time/create`,
+    headers : {  Authorization : `Bearer ${localStorage.getItem("token")}`},
+  }).then((res) => {
+    callModal('New Best wpm created')
+    getUserBestTimeData(userId)// update localstorage best time
+   
+  }).catch((err)=>{
+    console.log(err)
+  });
 }

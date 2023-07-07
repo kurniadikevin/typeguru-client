@@ -1,7 +1,7 @@
 import Dashboard from '@/components/dashboard';
 import { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
-import { callModal } from '@/functions';
+import { callModal, getUserBestTimeData } from '@/functions';
 import axios from 'axios';
 
 
@@ -39,12 +39,17 @@ export default function SignPage() {
           }
         }
       }    
+    }).catch((err)=>{
+      console.log(err)
     });
 }
 
+
 const redirectSignIn=(res:any)=>{
+  const userId=JSON.stringify(res.data.data.id)
   localStorage.setItem("token", (res.data.token));
   localStorage.setItem("session-data", JSON.stringify(res.data.data));
+  getUserBestTimeData(userId)
   push('/')
 }
 
@@ -74,7 +79,7 @@ useEffect(()=>{
       <div className='h-full flex flex-col items-center justify-center gap-5'>
         <Dashboard/>
         <div className=" w-3/12 flex-col p-4 min-w-fit">
-            <div className="h-32 text-3xl flex justify-center items-center pb-4 
+            <div className="h-20 pb-4 text-2xl flex justify-center items-center  
             font-bold break-words">
                 Sign Page
             </div>

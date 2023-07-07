@@ -3,7 +3,8 @@ import {fetchRandomParagraph} from '../textData';
 import 'material-icons/iconfont/material-icons.css';
 import { LoaderBuble } from '@/components/loader';
 import { ResultComponent } from '@/components/results';
-import { displayCorrectTime, highlightOnGoingWord, changeInputVisibility, autoScrollByPercentage, shuffleColorPalette } from '@/functions';
+import { displayCorrectTime, highlightOnGoingWord, changeInputVisibility, 
+  autoScrollByPercentage, shuffleColorPalette, checkForHigherWpm } from '@/functions';
 import { ColorToggler } from '@/components/colorToggler';
 import { BottomInfo } from '@/components/bottomInfo';
 import { colorData } from '@/components/colordata';
@@ -11,7 +12,9 @@ import Dashboard from '@/components/dashboard';
 
 export default function Home() {
 
-  const [gameMode,setGameMode]= useState<string>('word');
+  const [gameMode,setGameMode]= useState<string>('word');// category
+  const [type,setType]= useState('medium');//type
+
   const [countDown,setCountDown]= useState<number>(30);
   const [textTarget,setTextTarget]= useState<string>('');
   const [targetTextLength,setTargetTextLength]= useState<number>(5);// default length medium 5 paragraph
@@ -21,7 +24,7 @@ export default function Home() {
   const [intervalId,setIntervalId]= useState<any>();
   const [playOn,setPlayOn]= useState(false);
   const [wordIndex,setWordIndex]= useState<number>(0);
-  const [wpm,setWpm]= useState<number>();
+  const [wpm,setWpm]= useState<any>();
   const [grossWpm,setGrossWpm]= useState<number>();
   const [colorDataIndex,setColorDataIndex]= useState<number>(0);
 
@@ -80,6 +83,7 @@ export default function Home() {
     }
   }
 
+  // ------------------   end scene ------------>
   const checkForResult=(time:number,textLength:number)=>{
     const grossWpm= (textLength / 5  )/ (time / 60); 
     setGrossWpm(grossWpm);
@@ -88,6 +92,7 @@ export default function Home() {
     const nettWpm= grossWpm - errorWpm;
     console.log('nett wpm:' + nettWpm);
     setWpm(nettWpm);
+    checkForHigherWpm(nettWpm,gameMode,type)
   }
 
   const increaseTimeElapse=()=>{
@@ -240,25 +245,25 @@ export default function Home() {
       <div className='flex gap-2'>
         <div className='bg-[color:var(--secondaryColor)] px-4 py-2 rounded-xl
          cursor-pointer font-bold' 
-        id='length-select' onClick={()=>selectTextLength(2,0)}>Short</div>
+        id='length-select' onClick={()=>{selectTextLength(2,0); setType('short')}}>Short</div>
         <div className='bg-[color:var(--secondaryColor)] px-4 py-2 rounded-xl
          cursor-pointer font-bold'
-          id='length-select' onClick={()=>selectTextLength(5,1)}>Medium</div>
+          id='length-select' onClick={()=>{selectTextLength(5,1); setType('medium')}}>Medium</div>
         <div className='bg-[color:var(--secondaryColor)] px-4 py-2 rounded-xl
          cursor-pointer font-bold'
-          id='length-select' onClick={()=>selectTextLength(10,2)}>Long</div>
+          id='length-select' onClick={()=>{selectTextLength(10,2); setType('long')}}>Long</div>
       </div>
       :
       <div className='flex gap-2'>
         <div className='bg-[color:var(--secondaryColor)] px-4 py-2 rounded-xl
          cursor-pointer font-bold' 
-        id='length-select' onClick={()=>selectTimeCountDown(15,0)}>15</div>
+        id='length-select' onClick={()=>{selectTimeCountDown(15,0); setType('15')}}>15</div>
         <div className='bg-[color:var(--secondaryColor)] px-4 py-2 rounded-xl
          cursor-pointer font-bold'
-          id='length-select' onClick={()=>selectTimeCountDown(30,1)}>30</div>
+          id='length-select' onClick={()=>{selectTimeCountDown(30,1); setType('30')}}>30</div>
         <div className='bg-[color:var(--secondaryColor)] px-4 py-2 rounded-xl
          cursor-pointer font-bold'
-          id='length-select' onClick={()=>selectTimeCountDown(60,2)}>60</div>
+          id='length-select' onClick={()=>{selectTimeCountDown(60,2); setType('60')}}>60</div>
       </div>
       }
 
