@@ -92,3 +92,9 @@ export const getTextContent=(event:any,setState: any)=>{
     setState(divText);
   }
 
+export const formatDate=(input: any)=>{
+  const date= input.split('T')[0];
+  const day= date.split('-');
+   day[day.length-1] = Number(day[day.length -1]) 
+  return day.reverse().join('/')
+}

@@ -1,5 +1,5 @@
 import Dashboard from '@/components/dashboard';
-import { highlightSelection,assignOptions, getTextContent} from '@/functions';
+import { highlightSelection,assignOptions,formatDate, getTextContent} from '@/functions';
 import axios from 'axios';
 import { useEffect, useState } from 'react';
 
@@ -59,21 +59,24 @@ export default function LeaderBoardPage() {
   //render leaderboard data
   const renderLeaderBoardData=():any=> {
     return( data.map((item:any, index:number) => (
-      <div>
-        <div className='flex gap-4'>
-            <div>User</div>
-            <div key={index}>{item.id}</div>
-        </div>
-        <div className='flex gap-4'>
-          <div>Wpm</div>
-          <div>{item.wpm}</div>
-        </div>
+      <div className='grid grid-cols-5 gap-8 font-bold bg-[color:var(--tertiaryColor)] p-6'
+      id='leaderboard-data'>
+        <div>{item.name}</div>
+        <div>{item.wpm}</div>
+        <div>{item.category}</div>
+        <div>{item.type}</div>
+        <div>{formatDate(item.date)}</div>
       </div>
     ))
     )
   }
 
 
+  // highligh all selection for default page load
+  useEffect(()=>{
+    const catSelect : any=document.querySelectorAll('#cat-select');
+    catSelect[0].style.color='var(--highlightColor)';
+  },[])
 
   useEffect(()=>{
     fetchBestTime()
@@ -83,7 +86,7 @@ export default function LeaderBoardPage() {
   return (
       <div className='h-full flex flex-col items-center justify-center gap-5'>
         <Dashboard/>
-        <div>Leaderboard</div>
+        <div className='font-bold pt-4 text-xl'>Leaderboard</div>
         <div className='flex flex-row gap-10 font-bold bg-[color:var(--tertiaryColor)] p-6 rounded-xl'>
           
           {/* ---CATEGORY----- */}
@@ -127,12 +130,13 @@ export default function LeaderBoardPage() {
           </div>
       </div>
       <div>
-        <div className='flex gap-4'>
+        <div className='grid grid-cols-5 gap-8 font-bold bg-[color:var(--tertiaryColor)] 
+         text-[color:var(--accent)]  p-6 rounded-xl'>
           <div>Name</div>
           <div>WPM</div>
-          <div>Date</div>
-          <div>Cat</div>
+          <div>Category</div>
           <div>Type</div>
+          <div>Date</div>
         </div>
         {renderLeaderBoardData()}
       </div>
