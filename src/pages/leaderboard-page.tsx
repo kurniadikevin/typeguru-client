@@ -1,5 +1,6 @@
 import Dashboard from '@/components/dashboard';
-import { highlightSelection,assignOptions,formatDate, getTextContent} from '@/functions';
+import { highlightSelection,assignOptions,formatDate, 
+  getTextContent, clearOptionsSelect} from '@/functions';
 import axios from 'axios';
 import { useEffect, useState } from 'react';
 
@@ -20,10 +21,10 @@ export default function LeaderBoardPage() {
       url= `http://localhost:5000/best-time/top/${topNumber}`
     } 
     else if(category === 'Time' && !type){
-      url= `http://localhost:5000/best-time/top/${category.toLowerCase()}/15/${topNumber}`
+      url= `http://localhost:5000/best-time/top/${category.toLowerCase()}/${topNumber}`
     } 
     else if(category === 'Word' && !type){
-      url= `http://localhost:5000/best-time/top/${category.toLowerCase()}/short/${topNumber}`
+      url= `http://localhost:5000/best-time/top/${category.toLowerCase()}/${topNumber}`
     }
     else{
       url= `http://localhost:5000/best-time/top/${category.toLowerCase()}/${type}/${topNumber}`
@@ -55,6 +56,20 @@ export default function LeaderBoardPage() {
     }
   }
 
+  const removeOptionWhenCategoryAll=()=>{
+    const options= document.querySelectorAll('#option');
+    if(category==='All'){
+      options.forEach((item:any)=>{
+        item.style.color='var(--secondaryColor)'
+      })
+    } else{
+      options.forEach((item:any)=>{
+        item.style.color='var(--primaryColor)'
+      })
+    }
+  }
+
+
   
   //render leaderboard data
   const renderLeaderBoardData=():any=> {
@@ -80,48 +95,48 @@ export default function LeaderBoardPage() {
 
   useEffect(()=>{
     fetchBestTime()
-
+    removeOptionWhenCategoryAll()
   },[category,type])
 
   return (
       <div className='h-full flex flex-col items-center justify-center gap-5'>
         <Dashboard/>
         <div className='font-bold pt-4 text-xl'>Leaderboard</div>
-        <div className='flex flex-row gap-10 font-bold bg-[color:var(--tertiaryColor)] p-6 rounded-xl'>
+        <div className='flex flex-row  gap-10 font-bold bg-[color:var(--tertiaryColor)] p-6 rounded-xl'>
           
           {/* ---CATEGORY----- */}
           <div id='cat-select' className='text-[color:var(--accent) cursor-pointer'
-           onClick={(ev)=> toggleCategoryAndOption(ev,0)}>
+           onClick={(ev)=> {toggleCategoryAndOption(ev,0); clearOptionsSelect(setType(''));}}>
            All
           </div>
           <div id='cat-select' className='cursor-pointer' 
-           onClick={(ev)=> toggleCategoryAndOption(ev,1)}>
+           onClick={(ev)=>{toggleCategoryAndOption(ev,1); clearOptionsSelect(setType(''));}}>
             Time
           </div>
           <div id='cat-select' className='cursor-pointer' 
-           onClick={(ev)=> toggleCategoryAndOption(ev,2)}>
+           onClick={(ev)=> {toggleCategoryAndOption(ev,2); clearOptionsSelect(setType(''));}}>
             Word
           </div>
 
           {/* ----- TYPE --------- */}
           <div id='option' className='cursor-pointer '
-             onClick={(e)=>{ 
+             onClick={(e)=>{ if(category !=='All'){
               getTextContent(e,setType);
-              highlightSelection(e,0,'#option');
+              highlightSelection(e,0,'#option');}
              }}>
              Short
           </div>
           <div id='option' className='cursor-pointer'
-              onClick={(e)=>{ 
+              onClick={(e)=>{ if(category !=='All'){
                 getTextContent(e,setType);
-                highlightSelection(e,1,'#option');
+                highlightSelection(e,1,'#option');}
                }}>
              Medium
           </div>
           <div id='option' className='cursor-pointer'
-            onClick={(e)=>{ 
+            onClick={(e)=>{ if(category !== 'All'){
               getTextContent(e,setType);
-              highlightSelection(e,2,'#option');
+              highlightSelection(e,2,'#option');}
              }}>
               Long
           </div>

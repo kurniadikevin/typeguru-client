@@ -77,6 +77,15 @@ export const highlightSelection=(e:any,index:number,elements:any)=>{
     }
   }
 
+  //clear options when toggle category
+  export const clearOptionsSelect=(setState:any)=>{
+    const options= document.querySelectorAll('#option');
+    options.forEach((item :any)=>{
+      item.style.color='var(--primaryColor)';
+    })
+  }
+
+
 // assign set of option from array option 
 export const assignOptions=(optionType:string[])=>{
   const options= document.querySelectorAll('#option');
