@@ -74,7 +74,7 @@ export default function LeaderBoardPage() {
   //render leaderboard data
   const renderLeaderBoardData=():any=> {
     return( data.map((item:any, index:number) => (
-      <div className='grid grid-cols-5 gap-8 font-bold bg-[color:var(--tertiaryColor)] p-6'
+      <div key={index} className='grid grid-cols-5 gap-8 font-bold bg-[color:var(--tertiaryColor)] p-6'
       id='leaderboard-data'>
         <div>{item.name}</div>
         <div>{item.wpm}</div>
