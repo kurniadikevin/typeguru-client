@@ -18,16 +18,16 @@ export default function LeaderBoardPage() {
   const fetchBestTime= async ()=>{
     let url;
     if(category === 'All'){
-      url= `http://localhost:5000/best-time/top/${topNumber}`
+      url= `https://typeguru-api-production.up.railway.app/best-time/top/${topNumber}`
     } 
     else if(category === 'Time' && !type){
-      url= `http://localhost:5000/best-time/top/${category.toLowerCase()}/${topNumber}`
+      url= `https://typeguru-api-production.up.railway.app/best-time/top/${category.toLowerCase()}/${topNumber}`
     } 
     else if(category === 'Word' && !type){
-      url= `http://localhost:5000/best-time/top/${category.toLowerCase()}/${topNumber}`
+      url= `https://typeguru-api-production.up.railway.app/best-time/top/${category.toLowerCase()}/${topNumber}`
     }
     else{
-      url= `http://localhost:5000/best-time/top/${category.toLowerCase()}/${type}/${topNumber}`
+      url= `https://typeguru-api-production.up.railway.app/best-time/top/${category.toLowerCase()}/${type}/${topNumber}`
     }
 
      axios({

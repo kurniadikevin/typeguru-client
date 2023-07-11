@@ -21,13 +21,13 @@ export default function SignPage() {
         password: password,
       },
     
-      url: `http://localhost:5000/users/${urlExt}`,
+      url: `https://typeguru-api-production.up.railway.app/users/${urlExt}`,
     }).then((res) => {
       if(res.data === 'No User Exists'){
         callModal(res.data)
       } else{
         if(input === 'Sign-up'){
-         callModal(res.data.message)
+         callModal(res.data.message + ' sign in to continue!')
           console.log(res.data)
         } 
         // Succesful sign in
