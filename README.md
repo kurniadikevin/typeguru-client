@@ -11,4 +11,10 @@ Current version is have two different color mode, light mode and night mode.
 ## Build with
 React.js, Next.js, Typescript, Tailwind.css
 
-![Typeguru](/src/assets/typeguru-sc.png)
+## Latest update 1.1
+- Leaderboard system with user can make account and automaticly add best time to database. 
+- User page, allow user to see their best-wpm based on their category.
+- Leaderboard page, allow user to see leaderboard globally with display of top 10
+- We build own own API for user and best-wpm data. [Typeguru-API](https://typeguru-api-production.up.railway.app)
+
+![Typeguru](/src/assets/typeguru-sc-1.1.png)
