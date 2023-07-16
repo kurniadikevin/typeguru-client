@@ -17,4 +17,8 @@ React.js, Next.js, Typescript, Tailwind.css
 - Leaderboard page, allow user to see leaderboard globally with display of top 10
 - We build own own API for user and best-wpm data. [Typeguru-API](https://typeguru-api-production.up.railway.app)
 
+### Repositories
+- [Typeguru-Client](https://github.com/kurniadikevin/typeguru-client)
+- [Typeguru-API](https://github.com/kurniadikevin/typeguru-api)
+
 ![Typeguru](/src/assets/typeguru-sc-1.1.png)
