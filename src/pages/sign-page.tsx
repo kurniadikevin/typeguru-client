@@ -21,7 +21,7 @@ export default function SignPage() {
         password: password,
       },
     
-      url: `https://typeguru-api-production.up.railway.app/users/${urlExt}`,
+      url: `https://solid-bugs-attack.loca.lt/users/${urlExt}`,
     }).then((res) => {
       if(res.data === 'No User Exists'){
         callModal(res.data)

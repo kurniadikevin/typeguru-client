@@ -18,16 +18,16 @@ export default function LeaderBoardPage() {
   const fetchBestTime= async ()=>{
     let url;
     if(category === 'All'){
-      url= `https://typeguru-api-production.up.railway.app/best-time/top/${topNumber}`
+      url= `https://solid-bugs-attack.loca.lt/best-time/top/${topNumber}`
     } 
     else if(category === 'Time' && !type){
-      url= `https://typeguru-api-production.up.railway.app/best-time/top/${category.toLowerCase()}/${topNumber}`
+      url= `https://solid-bugs-attack.loca.lt/best-time/top/${category.toLowerCase()}/${topNumber}`
     } 
     else if(category === 'Word' && !type){
-      url= `https://typeguru-api-production.up.railway.app/best-time/top/${category.toLowerCase()}/${topNumber}`
+      url= `https://solid-bugs-attack.loca.lt/best-time/top/${category.toLowerCase()}/${topNumber}`
     }
     else{
-      url= `https://typeguru-api-production.up.railway.app/best-time/top/${category.toLowerCase()}/${type}/${topNumber}`
+      url= `https://solid-bugs-attack.loca.lt/best-time/top/${category.toLowerCase()}/${type}/${topNumber}`
     }
 
      axios({

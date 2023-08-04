@@ -113,7 +113,7 @@ export const formatDate=(input: any)=>{
 export const getUserBestTimeData=async(userId:any)=>{
   axios({
     method: "GET",
-    url: `https://typeguru-api-production.up.railway.app/best-time/by-user-id/${userId}`,
+    url: `https://solid-bugs-attack.loca.lt/best-time/by-user-id/${userId}`,
   }).then((res) => {
     console.log(res.data)
     localStorage.setItem("best-time-list", JSON.stringify(res.data));
@@ -162,7 +162,7 @@ const updateBestTimeData=async(bestTimeId:number,wpm:number, userId:number)=>{
     data : {
       wpm : wpm
     },
-    url: `https://typeguru-api-production.up.railway.app/best-time/update/${bestTimeId}`,
+    url: `https://solid-bugs-attack.loca.lt/best-time/update/${bestTimeId}`,
     headers : {  Authorization : `Bearer ${localStorage.getItem("token")}`},
   }).then((res) => {
     console.log(res.data)
@@ -182,7 +182,7 @@ const createNewBestTimeData=async(wpm:number, category:string,type:any,userId:nu
       "type" : type,
       "wpm" : wpm
   },
-    url: `https://typeguru-api-production.up.railway.app/best-time/create`,
+    url: `https://solid-bugs-attack.loca.lt/best-time/create`,
     headers : {  Authorization : `Bearer ${localStorage.getItem("token")}`},
   }).then((res) => {
     callModal('New Best wpm created')

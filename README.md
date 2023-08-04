@@ -15,7 +15,7 @@ React.js, Next.js, Typescript, Tailwind.css
 - Leaderboard system with user can make account and automaticly add best time to database. 
 - User page, allow user to see their best-wpm based on their category.
 - Leaderboard page, allow user to see leaderboard globally with display of top 10
-- We build own own API for user and best-wpm data. [Typeguru-API](https://typeguru-api-production.up.railway.app)
+- We build own own API for user and best-wpm data. [Typeguru-API](https://solid-bugs-attack.loca.lt)
 
 ### Repositories
 - [Typeguru-Client](https://github.com/kurniadikevin/typeguru-client)
