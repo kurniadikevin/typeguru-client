@@ -20,8 +20,10 @@ export default function SignPage() {
         name: username,
         password: password,
       },
-    
-      url: `https://solid-bugs-attack.loca.lt/users/${urlExt}`,
+      headers :{
+        'Bypass-Tunnel-Reminder' : 'bypass'
+      },
+      url: `${process.env.NEXT_PUBLIC_API_URL}/users/${urlExt}`,
     }).then((res) => {
       if(res.data === 'No User Exists'){
         callModal(res.data)

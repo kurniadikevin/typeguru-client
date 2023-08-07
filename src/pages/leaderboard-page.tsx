@@ -18,25 +18,26 @@ export default function LeaderBoardPage() {
   const fetchBestTime= async ()=>{
     let url;
     if(category === 'All'){
-      url= `https://solid-bugs-attack.loca.lt/best-time/top/${topNumber}`
+      url= `${process.env.NEXT_PUBLIC_API_URL}/best-time/top/${topNumber}`
     } 
     else if(category === 'Time' && !type){
-      url= `https://solid-bugs-attack.loca.lt/best-time/top/${category.toLowerCase()}/${topNumber}`
+      url= `${process.env.NEXT_PUBLIC_API_URL}/best-time/top/${category.toLowerCase()}/${topNumber}`
     } 
     else if(category === 'Word' && !type){
-      url= `https://solid-bugs-attack.loca.lt/best-time/top/${category.toLowerCase()}/${topNumber}`
+      url= `${process.env.NEXT_PUBLIC_API_URL}/best-time/top/${category.toLowerCase()}/${topNumber}`
     }
     else{
-      url= `https://solid-bugs-attack.loca.lt/best-time/top/${category.toLowerCase()}/${type}/${topNumber}`
+      url= `${process.env.NEXT_PUBLIC_API_URL}/best-time/top/${category.toLowerCase()}/${type}/${topNumber}`
     }
 
      axios({
       method : 'GET',
       url: url,
-
+      headers :{
+        'Bypass-Tunnel-Reminder' : 'bypass'
+      }
     }).then((res)=>{
       setData(res.data);
-      console.log(res.data)
 
     }).catch((err)=>{
       console.log(err)

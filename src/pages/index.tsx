@@ -211,6 +211,7 @@ export default function Home() {
    const textInput: any= document.querySelector('#text-input');
    textInput.focus();
    changeGameMode('word',1)// default game mode word
+   console.log(process.env.NEXT_PUBLIC_API_URL)
     },[])
 
   //highlight word on chage wordIndex
